@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.apache.xmlrpc.XmlRpcException;
+//import org.apache.xmlrpc.XmlRpcException;
 
 import com.ur.urcap.api.contribution.DaemonContribution;
 import com.ur.urcap.api.contribution.InstallationNodeContribution;
@@ -24,7 +24,7 @@ import com.ur.urcap.api.domain.userinteraction.keyboard.KeyboardNumberInput;
 
 public class DPInstallationNodeContribution implements InstallationNodeContribution{
 
-	private static final String XMLRPC_VARIABLE = "dynamique_port_swing";
+//	private static final String XMLRPC_VARIABLE = "dynamique_port_swing";
 	private static final String PORT_KEY = "port";
 	private static final Integer PORT_DEFAULT = 50010;
 	private static final String ENABLED_KEY = "enabled";
@@ -35,7 +35,6 @@ public class DPInstallationNodeContribution implements InstallationNodeContribut
 	private final DynamiquePortDaemonService daemonService;
 	private XmlRpcMyDaemonInterface xmlRpcDaemonInterface;
 	
-	private boolean pauseTimer = false;
 	private Timer uiTimer;
 	private UserInteraction userInteraction;
 	
@@ -52,7 +51,7 @@ public class DPInstallationNodeContribution implements InstallationNodeContribut
 		
 	}
 	
-	private void updateUI() {
+	private void updateUI() { 
 		DaemonContribution.State state = getDaemonState();
 		if(state == DaemonContribution.State.RUNNING) {
 			view.setStartButton(false);
@@ -77,6 +76,10 @@ public class DPInstallationNodeContribution implements InstallationNodeContribut
 		view.setStatusLabel(text);
 	}
 	
+	private DaemonContribution.State getDaemonState(){
+		return daemonService.getDaemon().getState();
+	}
+	
 	@Override
 	public void openView() {
 		// TODO Auto-generated method stub
@@ -98,7 +101,7 @@ public class DPInstallationNodeContribution implements InstallationNodeContribut
 					}
 				});
 			}
-		}, 0, 200);
+		}, 0, 200); //update interval 200ms
 	}
 
 	@Override
@@ -114,15 +117,7 @@ public class DPInstallationNodeContribution implements InstallationNodeContribut
 		// TODO Auto-generated method stub
 		
 	}
-	public void onClickStartDaemon() {
-		xmlRpcDaemonInterface = XmlRpcMyDaemonInterface.getInerfaceInstance(model.get(PORT_KEY, PORT_DEFAULT)); //get current interface instance
-		model.set(ENABLED_KEY, true);
-		applyDesiredDaemonStatus();
-	}
-	public void onClickStopDaemon() {
-		model.set(ENABLED_KEY, false);
-		applyDesiredDaemonStatus();
-	}
+
 	
 //	public XmlRpcMyDaemonInterface getXmlRpcMyDaemonInterface() {
 //		return xmlRpcDaemonInterface;
@@ -138,16 +133,12 @@ public class DPInstallationNodeContribution implements InstallationNodeContribut
 				// TODO Auto-generated method stub
 				if(isDaemonEnabled()) {
 					try {
-						pauseTimer = true;
 						awaitDaemonRunning(5000);
 						xmlRpcDaemonInterface.readPort();
 					}catch (Exception e) {
 						// TODO: handle exception
 						System.err.println("Could not run the daemon process");
 						e.printStackTrace();
-//						System.err.println("isDaemonEnabled(): "+ isDaemonEnabled());
-					}finally {
-						pauseTimer = false;
 					}
 				}else {
 					daemonService.getDaemon().stop();
@@ -162,6 +153,17 @@ public class DPInstallationNodeContribution implements InstallationNodeContribut
 			Thread.sleep(100);
 		}
 	}
+	
+	public void onClickStartDaemon() {
+		xmlRpcDaemonInterface = XmlRpcMyDaemonInterface.getInerfaceInstance(model.get(PORT_KEY, PORT_DEFAULT)); //get current interface instance
+		model.set(ENABLED_KEY, true);
+		applyDesiredDaemonStatus();
+	}
+	public void onClickStopDaemon() {
+		model.set(ENABLED_KEY, false);
+		applyDesiredDaemonStatus();
+	}
+	
 	public KeyboardNumberInput<Integer> getInputForTextField(Integer minValue, Integer maxValue) {
 		KeyboardInputFactory keyboardFactory = userInteraction.getKeyboardInputFactory();
 		InputValidationFactory validationFactory = userInteraction.getInputValidationFactory();
@@ -175,6 +177,9 @@ public class DPInstallationNodeContribution implements InstallationNodeContribut
 		return keyboardInput;
 	}
 
+	/*
+	 * public method for View usage
+	 */
 	public KeyboardInputCallback<Integer> getCallbackForTextField() {
 		return new KeyboardInputCallback<Integer>() {
 			@Override
@@ -183,6 +188,7 @@ public class DPInstallationNodeContribution implements InstallationNodeContribut
 				view.setPortTextFieldText(value);
 				try {
 					BufferedWriter out = new BufferedWriter(new FileWriter("/home/ur/ursim/ursim-5.11.0.108249/programs/port.dat"));
+					// this is only for demonstration, while being deployed on real robot, it would be another location.
 					out.write(value.toString());
 					out.close();
 					System.out.println("File creation successful!");
@@ -193,7 +199,5 @@ public class DPInstallationNodeContribution implements InstallationNodeContribut
 		};
 	}
 	
-	public DaemonContribution.State getDaemonState(){
-		return daemonService.getDaemon().getState();
-	}
+
 }

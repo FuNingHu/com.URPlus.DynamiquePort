@@ -15,7 +15,7 @@ public class XmlRpcMyDaemonInterface {
 	private static int currentPort = 0;
 	
 	private XmlRpcMyDaemonInterface(String host, int port) { //singleton pattern to avoid multi-creation of interface instance
-		this.currentPort = port;
+		XmlRpcMyDaemonInterface.currentPort = port;
 		XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
 		config.setEnabledForExtensions(true);
 		try {

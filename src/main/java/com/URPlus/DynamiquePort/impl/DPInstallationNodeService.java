@@ -2,7 +2,6 @@ package com.URPlus.DynamiquePort.impl;
 
 import java.util.Locale;
 
-import com.ur.urcap.api.contribution.DaemonService;
 import com.ur.urcap.api.contribution.ViewAPIProvider;
 import com.ur.urcap.api.contribution.installation.ContributionConfiguration;
 import com.ur.urcap.api.contribution.installation.CreationContext;
@@ -35,7 +34,7 @@ public class DPInstallationNodeService implements SwingInstallationNodeService<D
 	public DPInstallationNodeView createView(ViewAPIProvider apiProvider) {
 		// TODO Auto-generated method stub
 		SystemAPI systemAPI = apiProvider.getSystemAPI();
-		Locale locale = systemAPI.getSystemSettings().getLocalization().getLocaleForProgrammingLanguage();
+//		Locale locale = systemAPI.getSystemSettings().getLocalization().getLocaleForProgrammingLanguage();
 		Style style = systemAPI.getSoftwareVersion().getMajorVersion() >= 5 ? new V5Style() : new V3Style();
 		return new DPInstallationNodeView(style);
 	}

@@ -7,7 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+//import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -17,13 +17,12 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
+//import javax.swing.JTextPane;
+//import javax.swing.text.SimpleAttributeSet;
+//import javax.swing.text.StyleConstants;
 
 import com.ur.urcap.api.contribution.installation.swing.SwingInstallationNodeView;
 import com.ur.urcap.api.domain.userinteraction.keyboard.KeyboardNumberInput;
-import com.ur.urcap.api.domain.userinteraction.keyboard.KeyboardTextInput;
 
 public class DPInstallationNodeView implements SwingInstallationNodeView<DPInstallationNodeContribution>{
 	
@@ -38,7 +37,7 @@ public class DPInstallationNodeView implements SwingInstallationNodeView<DPInsta
 	
 	private static final ImageIcon TIP_ICON = new ImageIcon(DPInstallationNodeContribution.class.getResource("/icon/tip.png"));
 	
-	public DPInstallationNodeView(Style style) {
+	public DPInstallationNodeView(Style style) { //public constructor for Service usage
 		// TODO Auto-generated constructor stub
 		this.style = style;
 	}
@@ -79,7 +78,7 @@ public class DPInstallationNodeView implements SwingInstallationNodeView<DPInsta
 		JLabel tipIcon = new JLabel();
 		TIP_ICON.setImage(TIP_ICON.getImage().getScaledInstance(TIP_ICON.getIconWidth()/3, TIP_ICON.getIconHeight()/3, Image.SCALE_DEFAULT));
 		
-		inputField.setPreferredSize(new Dimension(200,30));
+		inputField.setPreferredSize(inputDimension);
 		inputField.setMaximumSize(inputField.getPreferredSize());
 		inputField.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
@@ -143,14 +142,14 @@ public class DPInstallationNodeView implements SwingInstallationNodeView<DPInsta
 		return Box.createRigidArea(new Dimension(0, space));
 	}
 
-	private Component createVerticalSpacing() {
-		return createVerticalSpacing(style.getVerticalSpacing());
-	}
-	
+
+	/*
+	 * public method for Contribution usage
+	 */
 	public void setPortTextFieldText(Integer str) {
 		portInputField.setText(str.toString());
 	}
-	public void setStartButton(Boolean enable) {
+	public void setStartButton(Boolean enable) { //when start button is disabled, portInputField should also be disabled.
 		enableButton.setEnabled(enable);
 		portInputField.setEnabled(enable);
 	}
